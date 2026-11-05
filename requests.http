@@ -1,0 +1,42 @@
+@host = http://127.0.0.1:8000
+
+### Estado: generador, modo de recuperación y tamaño del índice
+GET {{host}}/health
+
+### Documentos indexados
+GET {{host}}/documents
+
+### Pregunta en español (respuesta en el corpus)
+POST {{host}}/query
+Content-Type: application/json
+
+{
+  "question": "¿Qué índice de vegetación es más sensible al daño del saltahojas marrón en arroz?",
+  "top_k": 3
+}
+
+### Pregunta en inglés
+POST {{host}}/query
+Content-Type: application/json
+
+{
+  "question": "How is water stress in tomato estimated with hyperspectral data?",
+  "top_k": 3
+}
+
+### Pregunta fuera del corpus (debe abstenerse, sin fuentes citadas)
+POST {{host}}/query
+Content-Type: application/json
+
+{
+  "question": "¿Qué protocolo de comunicación LoRaWAN usan los sensores de humedad del suelo?",
+  "top_k": 3
+}
+
+### Validación: pregunta demasiado corta -> 422
+POST {{host}}/query
+Content-Type: application/json
+
+{
+  "question": "ab"
+}
