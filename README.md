@@ -120,18 +120,6 @@ El modelo recibe la pregunta y los fragmentos recuperados. El prompt establece a
 La API devuelve la respuesta junto con las fuentes. Cada fuente incluye el documento, la página y un campo `cited` que indica si se ha utilizado en la respuesta.
 
 El backend se elige automáticamente según lo que esté disponible: Gemini si hay clave, si no un modelo local con Ollama (`qwen3.5`), y si tampoco hay, un modo extractivo que devuelve los fragmentos más relevantes sin LLM. Así la API siempre responde.
-
-### Limitaciones actuales
-
-Para mantener el proyecto sencillo, no he implementado algunas funcionalidades que podrían mejorarse más adelante:
-
-- No utilizo un reranker, porque el corpus actual es pequeño.
-- No he eliminado todas las cabeceras y pies de página repetidos.
-- No he implementado una caché para las preguntas y sus embeddings.
-- No he añadido streaming de respuestas.
-
-Son mejoras que podrían ser interesantes en una versión posterior, pero no las considero necesarias para demostrar el funcionamiento básico del sistema.
-
 ### Escalabilidad: corpus 100 veces más grande
 
 Si el corpus aumentara 100 veces, sustituiría la búsqueda vectorial directa con NumPy por una base de datos vectorial o un índice ANN, como FAISS o Qdrant, para reducir el tiempo de recuperación.
