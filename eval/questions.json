@@ -1,0 +1,12 @@
+[
+  {"question": "¿Qué índice de vegetación es más sensible al daño del saltahojas marrón (brown planthopper) en plantas de arroz?", "expected_doc": "sensors-19-00375.pdf"},
+  {"question": "Which ratio vegetation index bands were most sensitive to brown planthopper stress on rice?", "expected_doc": "sensors-19-00375.pdf"},
+  {"question": "¿Cómo se estima el estrés hídrico del tomate con teledetección hiperespectral en suelos franco-arenosos y franco-limosos?", "expected_doc": "sensors-21-05705.pdf"},
+  {"question": "What spectral indices correlate with water stress in tomato grown in sandy loam soil?", "expected_doc": "sensors-21-05705.pdf"},
+  {"question": "¿Qué índices hiperespectrales permiten evaluar el mildiu (downy mildew) en Brassica?", "expected_doc": "sensors-24-01916.pdf"},
+  {"question": "How were hyperspectral vegetation indices used to assess downy mildew severity in Brassica?", "expected_doc": "sensors-24-01916.pdf"},
+  {"question": "¿Qué índices de vegetación funcionan mejor como características para reconocer y segmentar cultivos en datos hiperespectrales?", "expected_doc": "sensors-25-03817.pdf"},
+  {"question": "Is NDVI enough as a feature for crop recognition and segmentation in hyperspectral images?", "expected_doc": "sensors-25-03817.pdf"},
+  {"question": "¿Cómo se evalúa el estado hídrico del trigo de invierno bajo estrés por oídio (powdery mildew) con índices de vegetación del dosel?", "expected_doc": "fpls-08-01219.pdf"},
+  {"question": "Which canopy vegetation indices from in situ hyperspectral data assess plant water status of winter wheat under powdery mildew?", "expected_doc": "fpls-08-01219.pdf"}
+]

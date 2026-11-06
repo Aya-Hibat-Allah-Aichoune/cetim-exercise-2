@@ -1,0 +1,547 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fff0f6">
+<title>Consulta inteligente</title>
+
+<style>
+:root {
+  --bg: #fff5f9;
+  --surface: #ffffff;
+  --surface-soft: #fff8fb;
+  --text: #382735;
+  --muted: #927b8b;
+  --pink: #e879a8;
+  --pink-dark: #d6538b;
+  --pink-light: #ffe1ed;
+  --border: #f4dce7;
+  --success: #26966a;
+  --shadow: 0 12px 35px rgba(190, 100, 145, .10);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at top left, #ffe3ef 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, #fce5f5 0%, transparent 40%),
+    var(--bg);
+  color: var(--text);
+  font: 15px/1.6 Inter, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+}
+
+main {
+  max-width: 900px;
+  margin: auto;
+  padding: 55px 22px 70px;
+}
+
+/* Header */
+
+header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.logo {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 17px;
+  border-radius: 19px;
+  background: linear-gradient(135deg, #f5a6c7, #dc6e9f);
+  color: white;
+  font-size: 27px;
+  box-shadow: 0 8px 20px rgba(220, 110, 159, .25);
+}
+
+h1 {
+  font-size: clamp(25px, 5vw, 35px);
+  letter-spacing: -1px;
+  margin: 0;
+  font-weight: 750;
+}
+
+h1 span { color: var(--pink-dark); }
+
+.subtitle {
+  color: var(--muted);
+  margin: 9px 0 0;
+  font-size: 15px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 18px;
+  padding: 6px 13px;
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  background: rgba(255,255,255,.7);
+  color: var(--pink-dark);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  background: var(--success);
+  border-radius: 50%;
+}
+
+/* Main card */
+
+.search-card {
+  background: rgba(255,255,255,.88);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 25px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+}
+
+label {
+  display: block;
+  font-weight: 650;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+textarea {
+  width: 100%;
+  min-height: 125px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface-soft);
+  color: var(--text);
+  font: inherit;
+  resize: vertical;
+  outline: none;
+  transition: .2s;
+}
+
+textarea::placeholder { color: #b8a3b0; }
+
+textarea:focus, select:focus {
+  border-color: var(--pink);
+  box-shadow: 0 0 0 4px rgba(232,121,168,.12);
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 17px;
+  flex-wrap: wrap;
+}
+
+.settings {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+select {
+  padding: 9px 13px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: white;
+  color: var(--text);
+  outline: none;
+  font: inherit;
+}
+
+button {
+  font: inherit;
+  border: 0;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s, opacity .2s;
+}
+
+.primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 11px 22px;
+  border-radius: 12px;
+  color: white;
+  font-weight: 650;
+  background: linear-gradient(135deg, #ee91b7, #d95f96);
+  box-shadow: 0 6px 16px rgba(217,95,150,.23);
+}
+
+.primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 9px 20px rgba(217,95,150,.3);
+}
+
+.primary:disabled {
+  opacity: .65;
+  cursor: wait;
+}
+
+.status {
+  margin-top: 13px;
+  color: var(--muted);
+  font-size: 12px;
+  min-height: 19px;
+}
+
+/* Results */
+
+#out { margin-top: 25px; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 22px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+  animation: appear .35s ease;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 17px;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.section-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  background: var(--pink-light);
+  color: var(--pink-dark);
+  border-radius: 9px;
+}
+
+.answer {
+  white-space: pre-wrap;
+  line-height: 1.85;
+  font-size: 15px;
+}
+
+.answer mark {
+  background: #ffe1ed;
+  color: #c23d79;
+  padding: 2px 5px;
+  border-radius: 5px;
+  font-weight: 750;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border);
+}
+
+.metric {
+  padding: 6px 10px;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.metric strong { color: var(--pink-dark); }
+
+/* Sources */
+
+.source {
+  padding: 15px 0;
+  border-top: 1px solid #f5e8ee;
+}
+
+.source:first-of-type { border-top: 0; }
+
+.source-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.source-number {
+  color: var(--pink-dark);
+  font-weight: 800;
+}
+
+.source-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 30px;
+  background: #fff1f6;
+  color: #bd5683;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.badge.cited {
+  background: #e8f7ef;
+  color: #26966a;
+}
+
+.excerpt {
+  margin: 8px 0 0 25px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.error {
+  color: #c03968;
+  background: #fff0f3;
+  border: 1px solid #ffd3df;
+}
+
+.empty {
+  text-align: center;
+  padding: 30px 15px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+footer {
+  text-align: center;
+  margin-top: 35px;
+  color: #b59baa;
+  font-size: 11px;
+}
+
+@media(max-width: 600px) {
+  main { padding: 35px 14px; }
+  .search-card { padding: 18px; }
+  .controls { align-items: stretch; }
+  .primary { width: 100%; }
+  .settings { justify-content: space-between; }
+  .card { padding: 17px; }
+}
+</style>
+</head>
+
+<body>
+<main>
+
+<header>
+  <div class="logo">✿</div>
+  
+  <p class="subtitle">
+    Consulta inteligente de documentación científica y técnica
+  </p>
+  <div class="pill">
+    <span class="dot"></span>
+    Sistema RAG · AI Powered
+  </div>
+</header>
+
+<section class="search-card">
+  <label for="q">¿Qué quieres consultar?</label>
+
+  <textarea
+    id="q"
+    placeholder="Ejemplo: ¿Qué índice de vegetación es más sensible al daño del saltahojas marrón en arroz?"
+  ></textarea>
+
+  <div class="controls">
+    <div class="settings">
+      <label for="k" style="margin:0">Fragmentos:</label>
+      <select id="k">
+        <option value="3">3</option>
+        <option value="5" selected>5</option>
+        <option value="8">8</option>
+      </select>
+    </div>
+
+    <button class="primary" id="go">
+      <span>✧</span>
+      Preguntar
+    </button>
+  </div>
+
+  <div class="status" id="status" aria-live="polite"></div>
+</section>
+
+<div id="out" aria-live="polite">
+  <div class="empty">
+    ✿ Introduce una pregunta para consultar tus documentos.
+  </div>
+</div>
+
+<footer>
+  Retrieval Augmented Generation · FastAPI
+</footer>
+
+</main>
+
+<script>
+const $ = (s) => document.querySelector(s);
+
+const esc = (value) =>
+  String(value ?? "").replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[c]);
+
+let timer = null;
+
+async function ask() {
+  const question = $("#q").value.trim();
+
+  if (question.length < 3) {
+    $("#status").textContent = "Escribe una pregunta válida.";
+    return;
+  }
+
+  const btn = $("#go");
+  btn.disabled = true;
+
+  const t0 = Date.now();
+
+  $("#out").innerHTML = "";
+  $("#status").textContent = "Preparando consulta...";
+
+  timer = setInterval(() => {
+    const seconds = Math.round((Date.now() - t0) / 1000);
+    $("#status").textContent =
+      `Recuperando información y generando respuesta... ${seconds} s`;
+  }, 500);
+
+  try {
+    const response = await fetch("/query", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        question,
+        top_k: Number($("#k").value)
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.detail ? JSON.stringify(data.detail) : response.statusText
+      );
+    }
+
+    render(data);
+
+  } catch (error) {
+    $("#out").innerHTML = `
+      <div class="card error">
+        <strong>Error en la consulta</strong>
+        <p>${esc(error.message || error)}</p>
+        <small>Comprueba que el servidor FastAPI está funcionando.</small>
+      </div>
+    `;
+  } finally {
+    clearInterval(timer);
+    btn.disabled = false;
+
+    const seconds = ((Date.now() - t0) / 1000).toFixed(1);
+    $("#status").textContent = `✓ Consulta completada en ${seconds} s`;
+  }
+}
+
+function render(data) {
+  const answer = esc(data.answer)
+    .replace(/\[(\d+)\]/g, "<mark>[$1]</mark>");
+
+  const sources = (data.sources || []).map((source) => `
+    <div class="source">
+      <div class="source-head">
+        <span class="source-number">[${esc(source.n)}]</span>
+        <span class="source-title">
+          ${esc(source.title || source.doc)}
+        </span>
+        <span class="badge">
+          ${esc(source.doc)}, página ${esc(source.page)}
+        </span>
+        <span class="badge ${source.cited ? "cited" : ""}">
+          ${source.cited ? "✓ Citada" : "No citada"}
+        </span>
+      </div>
+      <p class="excerpt">${esc(source.excerpt)}</p>
+    </div>
+  `).join("");
+
+  $("#out").innerHTML = `
+    <section class="card">
+      <div class="section-title">
+        <span class="section-icon">✧</span>
+        Respuesta
+      </div>
+
+      <div class="answer">${answer}</div>
+
+      <div class="meta">
+        <span class="metric">
+          Backend: <strong>${esc(data.backend)}</strong>
+        </span>
+        <span class="metric">
+          Retrieval: <strong>${esc(data.retrieval_ms)} ms</strong>
+        </span>
+        <span class="metric">
+          Generation: <strong>${(Number(data.generation_ms) / 1000).toFixed(1)} s</strong>
+        </span>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
+        <span class="section-icon">♡</span>
+        Fuentes consultadas (${(data.sources || []).length})
+      </div>
+
+      ${sources || '<p class="excerpt">No se encontraron fuentes.</p>'}
+    </section>
+  `;
+}
+
+$("#go").addEventListener("click", ask);
+
+$("#q").addEventListener("keydown", (event) => {
+  if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+    ask();
+  }
+});
+</script>
+
+</body>
+</html>
